@@ -10,31 +10,28 @@ export const Video = () => {
     const [player, setPlayer] = useState<YT.Player | null>(null);
 
     useEffect(() => {
-        // YouTube APIのスクリプトを動的に追加（初回のみ）
         const tag = document.createElement("script");
         tag.src = "https://www.youtube.com/iframe_api";
         const firstScriptTag = document.getElementsByTagName("script")[0];
         firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag);
 
-        // グローバル関数として定義
         window.onYouTubeIframeAPIReady = () => {
-        const newPlayer = new YT.Player("player", {
-            height: "390",
-            width: "640",
-            videoId: "M7lc1UVf-VE",
-            playerVars: {
-            playsinline: 1,
-            },
-            events: {
-            onReady: onPlayerReady,
-            },
-        });
-        setPlayer(newPlayer);
+            const newPlayer = new YT.Player("player", {
+                width: '100%',
+                height: '100%',
+                videoId: "M7lc1UVf-VE",
+                playerVars: {
+                    playsinline: 1,
+                },
+                events: {
+                    onReady: onPlayerReady,
+                },
+            });
+            setPlayer(newPlayer);
         };
 
         return () => {
-        // クリーンアップ（必要ならプレイヤーを破棄）
-        player?.destroy();
+            player?.destroy();
         };
     }, []);
 
@@ -42,5 +39,9 @@ export const Video = () => {
         event.target.playVideo();
     }
 
-    return <div id="player"></div>;
+    return (
+        <div className="w-full max-w-[1280px] mx-auto aspect-video">
+            <div id="player" className="w-full h-full" />
+        </div>
+    );
 };

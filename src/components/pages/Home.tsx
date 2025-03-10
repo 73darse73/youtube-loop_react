@@ -1,9 +1,12 @@
 import { Video } from "../atoms/Video";
+import { DefaultLayout } from "../templates/DefaultLayout";
 
 export const Home = () => {
     return (
         <>
-            <Video />
+            <DefaultLayout>
+                <Video />
+            </DefaultLayout>
         </>
     )
 }
