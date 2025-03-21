@@ -1,11 +1,14 @@
 import { Input } from "../atoms/Input";
 
-export const InputField = () => {
+type InputFieldProps = {
+    children: React.ReactNode;
+}
+
+export const InputField = ({ children }: InputFieldProps) => {
     return (
-        <div>
-            <label htmlFor="input-field">
-                <Input />
-            </label>
-        </div>
+        <label htmlFor="url">
+            <p className="text-sm font-medium">{children}</p>
+            <Input id="url" />
+        </label>
     )
 }
