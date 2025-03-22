@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import { Header } from "../organism/layout/Header";
 
-type DefaultLayoutProps = {
+interface DefaultLayoutProps {
     children: ReactNode;
 }
 
