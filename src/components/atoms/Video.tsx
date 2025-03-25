@@ -8,9 +8,11 @@ declare global {
 
 interface VideoProps {
     videoId: string;
+    startTime: number;
+    endTime: number;
 }
 
-export const Video = ({ videoId }: VideoProps) => {
+export const Video = ({ videoId, startTime, endTime }: VideoProps) => {
     const [player, setPlayer] = useState<YT.Player | null>(null);
 
     useEffect(() => {
@@ -19,6 +21,21 @@ export const Video = ({ videoId }: VideoProps) => {
         const firstScriptTag = document.getElementsByTagName("script")[0];
         firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag);
     }, []);
+
+    function onPlayerStateChange(event: YT.OnStateChangeEvent) {
+        // 動画が終了したときの処理
+        if (event.data === YT.PlayerState.ENDED) {
+            // 開始時間に戻って再生
+            event.target.seekTo(startTime, true);
+            console.log('seekTo', startTime);
+            
+            event.target.playVideo();
+        }
+    }
+
+    function onPlayerReady(event: YT.PlayerEvent) {
+        event.target.playVideo();
+    }
 
     useEffect(() => {
         if (!player) {
@@ -29,25 +46,28 @@ export const Video = ({ videoId }: VideoProps) => {
                     videoId: videoId,
                     playerVars: {
                         playsinline: 1,
+                        start: startTime,
+                        end: endTime,
                     },
                     events: {
                         onReady: onPlayerReady,
+                        onStateChange: onPlayerStateChange
                     },
                 });
                 setPlayer(newPlayer);
             };
         } else {
-            player.loadVideoById(videoId);
+            player.loadVideoById({
+                videoId: videoId,
+                startSeconds: startTime,
+                endSeconds: endTime
+            });
         }
 
         return () => {
             player?.destroy();
         };
-    }, [videoId]);
-
-    function onPlayerReady(event: YT.PlayerEvent) {
-        event.target.playVideo();
-    }
+    }, [videoId, startTime, endTime]);
 
     return (
         <div className="w-full max-w-[1280px] mx-auto aspect-video">

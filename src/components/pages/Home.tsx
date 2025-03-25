@@ -7,10 +7,22 @@ import { useState, ChangeEvent } from "react";
 
 export const Home = () => {
     const [inputUrl, setInputUrl] = useState("");
+    const [startTime, setStartTime] = useState(0);
+    const [endTime, setEndTime] = useState(0);
     const [videoId, setVideoId] = useState("");
+    const [appliedStartTime, setAppliedStartTime] = useState(0);
+    const [appliedEndTime, setAppliedEndTime] = useState(0);
 
-    const handleInputUrl = (e: ChangeEvent<HTMLInputElement>) => {
+    const handleInput = (e: ChangeEvent<HTMLInputElement>) => {
         setInputUrl(e.target.value);
+    }
+
+    const handleStartTime = (e: ChangeEvent<HTMLInputElement>) => {
+        setStartTime(Number(e.target.value));
+    }
+
+    const handleEndTime = (e: ChangeEvent<HTMLInputElement>) => {
+        setEndTime(Number(e.target.value));
     }
 
     const execution = () => {
@@ -36,6 +48,8 @@ export const Home = () => {
             }
 
             setVideoId(id);
+            setAppliedStartTime(startTime);
+            setAppliedEndTime(endTime);
         } catch (error) {
             alert('URLの解析中にエラーが発生しました。');
             console.error(error);
@@ -45,16 +59,20 @@ export const Home = () => {
     return (
         <>
             <DefaultLayout>
-                <Video videoId={videoId} />
-                <InputField id="url" onChange={handleInputUrl}>
+                <Video 
+                    videoId={videoId} 
+                    startTime={appliedStartTime} 
+                    endTime={appliedEndTime} 
+                />
+                <InputField id="url" type="text" onChange={handleInput}>
                     URL
                 </InputField>
-                {/* <InputField id="start-time">
+                <InputField id="start-time" type="number" onChange={handleStartTime}>
                     開始時間
                 </InputField>
-                <InputField id="end-time">
+                <InputField id="end-time" type="number" onChange={handleEndTime}>
                     終了時間
-                </InputField> */}
+                </InputField>
                 <Button onClick={execution}>実行</Button>
             </DefaultLayout>
         </>
