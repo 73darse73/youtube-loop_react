@@ -14,6 +14,7 @@ interface VideoProps {
 
 export const Video = ({ videoId, startTime, endTime }: VideoProps) => {
     const [player, setPlayer] = useState<YT.Player | null>(null);
+    console.log(videoId, startTime, endTime);
 
     useEffect(() => {
         const tag = document.createElement("script");
@@ -21,13 +22,14 @@ export const Video = ({ videoId, startTime, endTime }: VideoProps) => {
         const firstScriptTag = document.getElementsByTagName("script")[0];
         firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag);
     }, []);
+    
 
     function onPlayerStateChange(event: YT.OnStateChangeEvent) {
         // 動画が終了したときの処理
         if (event.data === YT.PlayerState.ENDED) {
             // 開始時間に戻って再生
             event.target.seekTo(startTime, true);
-            console.log('seekTo', startTime);
+            console.log(videoId, startTime, endTime);
             
             event.target.playVideo();
         }
